@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="base_spacing">18.dp</dimen>
+    <dimen name="icon_button_size">48.dp</dimen>
+</resources>
