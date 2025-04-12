@@ -2,6 +2,7 @@ package com.oznnni.kkodlebap.designsystem
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -27,6 +28,7 @@ fun KkodlebapModal(
 ) {
     if (!isOpen) return
     ModalBottomSheet(
+        modifier = Modifier.padding(top = 92.dp),
         sheetState = sheetState,
         shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
         onDismissRequest = onDismissRequest,
