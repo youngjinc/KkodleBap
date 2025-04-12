@@ -7,12 +7,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,36 +34,81 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
+import androidx.compose.ui.util.fastForEachIndexed
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.oznnni.kkodlebap.R
 import com.oznnni.kkodlebap.designsystem.KkodlebapAlert
 import com.oznnni.kkodlebap.designsystem.KkodlebapModal
 import com.oznnni.kkodlebap.presentation.content.GameResultAlertContent
 import com.oznnni.kkodlebap.presentation.content.GameResultRes
 import com.oznnni.kkodlebap.presentation.content.TutorialModalContent
+import com.oznnni.kkodlebap.presentation.viewmodel.JamoTile
+import com.oznnni.kkodlebap.presentation.viewmodel.PlaygroundUiModel
+import com.oznnni.kkodlebap.presentation.viewmodel.PlaygroundViewModel
 import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
 import com.oznnni.kkodlebap.ui.theme.Typography
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Composable
-fun PlaygroundScreen() {
-    PlaygroundContent()
+fun PlaygroundScreen(viewModel: PlaygroundViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+    val context = LocalContext.current
+    val uiModel by viewModel.uiModel.collectAsStateWithLifecycle()
+    var gameResultRes by remember { mutableStateOf<GameResultRes?>(null) }
+
+    LaunchedEffect(Unit) {
+        viewModel.drawAnswer(context = context)
+    }
+
+    PlaygroundContent(
+        uiModel = uiModel,
+        gameResultRes = gameResultRes,
+        updateGameResultRes = {
+            gameResultRes = it
+        },
+        onClickJamoKey = {
+            viewModel.onChangeInput(jamoTile = it)
+        },
+        onClickSubmit = {
+            viewModel.submitInput(context = context, afterSuccess = {
+                gameResultRes = it
+            })
+        },
+        onClickDelete = {
+            viewModel.onChangeInput(jamoTile = null)
+        },
+        replayGame = {
+            viewModel.clearGame()
+            viewModel.drawAnswer(context = context)
+        }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlaygroundContent() {
+fun PlaygroundContent(
+    uiModel: PlaygroundUiModel,
+    gameResultRes: GameResultRes?,
+    updateGameResultRes: (GameResultRes?) -> Unit,
+    onClickJamoKey: (JamoTile) -> Unit,
+    onClickSubmit: () -> Unit,
+    onClickDelete: () -> Unit,
+    replayGame: () -> Unit,
+) {
     val tutorialSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var isOpenTutorialModal by remember { mutableStateOf(false) }
-    var isOpenResultAlert by remember { mutableStateOf(false) }
+
     val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(bottom = 72.dp)
             .background(KkodlebapTheme.colors.white),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -98,26 +144,11 @@ fun PlaygroundContent() {
             }
         }
 
-        LazyVerticalGrid(
-            modifier = Modifier
-                .padding(top = 56.dp)
-                .fillMaxWidth(0.75f),
-            columns = GridCells.Fixed(6),
-            horizontalArrangement = Arrangement.spacedBy(5.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
-        ) {
-            items(36) {
-                Cell(
-                    modifier = Modifier
-                        .weight(1f)
-                        .aspectRatio(1f), jamo = "ㅈ"
-                )
-            }
-        }
+        GameBoard(input = uiModel.input)
 
         Text(
             modifier = Modifier.padding(top = 24.dp, bottom = 5.dp),
-            text = "자모 6개를 입력해 주세요!",
+            text = uiModel.errorMessage,
             style = Typography.SuitR5,
             color = KkodlebapTheme.colors.red700
         )
@@ -128,33 +159,19 @@ fun PlaygroundContent() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                listOf("ㅂ", "ㅈ", "ㄷ", "ㄱ", "ㅅ", "ㅛ", "ㅕ", "ㅑ").fastForEach {
-                    Key(key = it)
-                }
-            }
-
-            Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                listOf("ㅁ", "ㄴ", "ㅇ", "ㄹ", "ㅎ", "ㅗ", "ㅓ", "ㅏ", "ㅣ").fastForEach {
-                    Key(key = it)
-                }
-            }
-
-            Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                Key(iconRes = R.drawable.ic_backspace, backgroundColor = KkodlebapTheme.colors.gray200, description = "지우기 아이콘")
-
-                listOf("ㅋ", "ㅌ", "ㅊ", "ㅍ", "ㅠ", "ㅜ", "ㅡ").fastForEach {
-                    Key(key = it)
-                }
-
-                Key(iconRes = R.drawable.ic_check, backgroundColor = KkodlebapTheme.colors.blue600, description = "정답 제출 체크 아이콘")
-            }
+            KeyBoard(
+                keyboard = uiModel.keyboard,
+                onClickJamoKey = onClickJamoKey,
+                onClickSubmit = onClickSubmit,
+                onClickDelete = onClickDelete
+            )
         }
-
-        Spacer(modifier = Modifier.height(72.dp))
     }
 
-    KkodlebapModal(isOpen = isOpenTutorialModal, sheetState = tutorialSheetState, onDismissRequest = { /*TODO*/ }) {
+    KkodlebapModal(
+        isOpen = isOpenTutorialModal,
+        sheetState = tutorialSheetState,
+        onDismissRequest = { isOpenTutorialModal = false }) {
         TutorialModalContent(onClickClose = {
             coroutineScope.launch {
                 tutorialSheetState.hide()
@@ -163,20 +180,58 @@ fun PlaygroundContent() {
         })
     }
 
-    KkodlebapAlert(isOpen = isOpenResultAlert, onDismissRequest = { isOpenResultAlert = false }) {
-        GameResultAlertContent(answer = "계단", gameResultRes = GameResultRes.SUCCESS)
+    KkodlebapAlert(isOpen = gameResultRes != null, onDismissRequest = {
+        updateGameResultRes(null)
+    }) {
+        gameResultRes?.let {
+            GameResultAlertContent(answer = uiModel.answer ?: "", gameResultRes = it, onClick = {
+                replayGame()
+                updateGameResultRes(null)
+            })
+        }
     }
 }
 
 @Composable
-private fun Cell(modifier: Modifier = Modifier, jamo: String) {
+private fun ColumnScope.GameBoard(input: List<JamoTile>) {
+    LazyVerticalGrid(
+        modifier = Modifier
+            .padding(top = 56.dp)
+            .fillMaxWidth(0.75f),
+        columns = GridCells.Fixed(6),
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        items(PlaygroundUiModel.numOfGameBoardKey) { idx ->
+            if (idx < input.size) {
+                GameBoardCell(
+                    modifier = Modifier
+                        .weight(1f)
+                        .aspectRatio(1f),
+                    jamoTile = input[idx],
+                )
+            } else {
+                GameBoardCell(
+                    modifier = Modifier
+                        .weight(1f)
+                        .aspectRatio(1f),
+                    jamoTile = JamoTile(),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun GameBoardCell(modifier: Modifier = Modifier, jamoTile: JamoTile) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(KkodlebapTheme.colors.blue100), contentAlignment = Alignment.Center
+            .background(jamoTile.colorType.color),
+        contentAlignment = Alignment.Center
     ) {
         Text(
-            text = jamo,
+            text = jamoTile.jamo.toString(),
             style = Typography.SuitM1,
             color = KkodlebapTheme.colors.gray700
         )
@@ -184,17 +239,64 @@ private fun Cell(modifier: Modifier = Modifier, jamo: String) {
 }
 
 @Composable
-private fun Key(modifier: Modifier = Modifier, key: String) {
+private fun KeyBoard(
+    keyboard: List<List<JamoTile>>,
+    onClickJamoKey: (JamoTile) -> Unit,
+    onClickSubmit: () -> Unit,
+    onClickDelete: () -> Unit
+) {
+    keyboard.fastForEachIndexed { i, jamoTiles ->
+        Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            when (i) {
+                keyboard.lastIndex -> {
+                    IconKey(
+                        iconRes = R.drawable.ic_backspace,
+                        backgroundColor = KkodlebapTheme.colors.gray200,
+                        description = "지우기 아이콘",
+                        onClick = onClickDelete
+
+                    )
+
+                    jamoTiles.fastForEach { jamoTile ->
+                        JamoKey(jamoTile = jamoTile, onClickJamoKey = onClickJamoKey)
+                    }
+
+                    IconKey(
+                        iconRes = R.drawable.ic_check,
+                        backgroundColor = KkodlebapTheme.colors.blue600,
+                        description = "정답 제출 체크 아이콘",
+                        onClick = onClickSubmit
+                    )
+                }
+
+                else -> {
+                    jamoTiles.fastForEach { jamoTile ->
+                        JamoKey(jamoTile = jamoTile, onClickJamoKey = onClickJamoKey)
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun JamoKey(
+    modifier: Modifier = Modifier,
+    jamoTile: JamoTile,
+    onClickJamoKey: (JamoTile) -> Unit
+) {
     Box(
         modifier = modifier
             .size(width = 33.dp, height = 41.dp)
             .clip(RoundedCornerShape(6.dp))
-            .clickable { }
-            .background(KkodlebapTheme.colors.blue100),
+            .clickable {
+                onClickJamoKey(jamoTile)
+            }
+            .background(jamoTile.colorType.color),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = key,
+            text = jamoTile.jamo.toString(),
             style = Typography.SuitM3,
             color = KkodlebapTheme.colors.gray700
         )
@@ -202,12 +304,20 @@ private fun Key(modifier: Modifier = Modifier, key: String) {
 }
 
 @Composable
-private fun Key(modifier: Modifier = Modifier, @DrawableRes iconRes: Int, backgroundColor: Color, description: String) {
+private fun IconKey(
+    modifier: Modifier = Modifier,
+    @DrawableRes iconRes: Int,
+    backgroundColor: Color,
+    description: String,
+    onClick: () -> Unit,
+) {
     Box(
         modifier = modifier
             .size(width = 33.dp, height = 41.dp)
             .clip(RoundedCornerShape(6.dp))
-            .clickable { }
+            .clickable {
+                onClick()
+            }
             .background(backgroundColor),
         contentAlignment = Alignment.Center
     ) {
@@ -222,5 +332,13 @@ private fun Key(modifier: Modifier = Modifier, @DrawableRes iconRes: Int, backgr
 @Preview(showBackground = true)
 @Composable
 fun PreviewPlaygroundContent() {
-    PlaygroundContent()
+    PlaygroundContent(
+        uiModel = PlaygroundUiModel(),
+        gameResultRes = null,
+        updateGameResultRes = {},
+        onClickJamoKey = {},
+        onClickSubmit = {},
+        onClickDelete = {},
+        replayGame = {}
+    )
 }

@@ -24,7 +24,7 @@ import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
 import com.oznnni.kkodlebap.ui.theme.Typography
 
 @Composable
-fun GameResultAlertContent(answer: String, gameResultRes: GameResultRes) {
+fun GameResultAlertContent(answer: String, gameResultRes: GameResultRes, onClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -59,7 +59,9 @@ fun GameResultAlertContent(answer: String, gameResultRes: GameResultRes) {
             modifier = Modifier
                 .padding(top = 68.dp)
                 .fillMaxWidth(),
-            onClick = { /** TODO */ },
+            onClick = {
+                onClick()
+            },
             shape = RoundedCornerShape(10.dp),
             enabled = true,
             colors = ButtonDefaults.buttonColors(
@@ -78,14 +80,13 @@ fun GameResultAlertContent(answer: String, gameResultRes: GameResultRes) {
             Text(
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 14.dp)
-                    .clickable { /** TODO */}
+                    .clickable { /** TODO */ }
                     .padding(10.dp),
                 text = "결과 공유하기",
                 style = Typography.SuitM4,
                 color = KkodlebapTheme.colors.gray400
             )
-        }
-        else {
+        } else {
             Spacer(modifier = Modifier.height(24.dp))
         }
     }
@@ -117,5 +118,9 @@ enum class GameResultRes(
 @Preview(showBackground = true)
 @Composable
 fun PreviewGameResultAlertContent() {
-    GameResultAlertContent(answer = "계단", gameResultRes = GameResultRes.SUCCESS)
+    GameResultAlertContent(
+        answer = "계단",
+        gameResultRes = GameResultRes.SUCCESS,
+        onClick = {}
+    )
 }
