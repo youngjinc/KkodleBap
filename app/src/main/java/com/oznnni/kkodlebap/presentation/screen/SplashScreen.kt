@@ -1,4 +1,4 @@
-package com.oznnni.kkodlebap.presentation
+package com.oznnni.kkodlebap.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

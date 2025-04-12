@@ -1,4 +1,4 @@
-package com.oznnni.kkodlebap.presentation
+package com.oznnni.kkodlebap.presentation.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

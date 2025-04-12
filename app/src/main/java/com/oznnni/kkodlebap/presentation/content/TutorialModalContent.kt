@@ -1,4 +1,4 @@
-package com.oznnni.kkodlebap.presentation
+package com.oznnni.kkodlebap.presentation.content
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -44,7 +44,7 @@ fun TutorialModalContent(
                 .padding(18.dp)
                 .align(Alignment.End),
             text = "닫기",
-            style = Typography.SuitR1,
+            style = Typography.SuitR2,
             color = KkodlebapTheme.colors.blue600
         )
 

@@ -1,4 +1,4 @@
-package com.oznnni.kkodlebap.presentation
+package com.oznnni.kkodlebap.presentation.screen
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
@@ -40,6 +40,9 @@ import androidx.compose.ui.util.fastForEach
 import com.oznnni.kkodlebap.R
 import com.oznnni.kkodlebap.designsystem.KkodlebapAlert
 import com.oznnni.kkodlebap.designsystem.KkodlebapModal
+import com.oznnni.kkodlebap.presentation.content.GameResultAlertContent
+import com.oznnni.kkodlebap.presentation.content.GameResultRes
+import com.oznnni.kkodlebap.presentation.content.TutorialModalContent
 import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
 import com.oznnni.kkodlebap.ui.theme.Typography
 import kotlinx.coroutines.launch

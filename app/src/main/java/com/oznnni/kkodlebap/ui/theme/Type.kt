@@ -66,6 +66,14 @@ object Typography {
         platformStyle = PlatformTextStyle(includeFontPadding = true),
     )
 
+    val SuitR2 = TextStyle(
+        fontFamily = Suit,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Normal,
+        lineHeight = 26.sp,
+        platformStyle = PlatformTextStyle(includeFontPadding = true),
+    )
+
     val SuitR4 = TextStyle(
         fontFamily = Suit,
         fontSize = 16.sp,
