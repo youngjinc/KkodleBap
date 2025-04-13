@@ -41,28 +41,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.oznnni.kkodlebap.R
 import com.oznnni.kkodlebap.designsystem.KkodlebapAlert
 import com.oznnni.kkodlebap.designsystem.KkodlebapModal
 import com.oznnni.kkodlebap.presentation.content.GameResultAlertContent
 import com.oznnni.kkodlebap.presentation.content.GameResultRes
 import com.oznnni.kkodlebap.presentation.content.TutorialModalContent
+import com.oznnni.kkodlebap.presentation.util.WordPool
+import com.oznnni.kkodlebap.presentation.util.copyTextToClipboard
 import com.oznnni.kkodlebap.presentation.viewmodel.JamoTile
 import com.oznnni.kkodlebap.presentation.viewmodel.PlaygroundUiModel
 import com.oznnni.kkodlebap.presentation.viewmodel.PlaygroundViewModel
 import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
 import com.oznnni.kkodlebap.ui.theme.Typography
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @Composable
-fun PlaygroundScreen(viewModel: PlaygroundViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun PlaygroundScreen(viewModel: PlaygroundViewModel = viewModel()) {
     val context = LocalContext.current
     val uiModel by viewModel.uiModel.collectAsStateWithLifecycle()
     var gameResultRes by remember { mutableStateOf<GameResultRes?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.drawAnswer(context = context)
+        WordPool.getJamoParsedWords(context = context)
     }
 
     PlaygroundContent(
@@ -85,6 +88,13 @@ fun PlaygroundScreen(viewModel: PlaygroundViewModel = androidx.lifecycle.viewmod
         replayGame = {
             viewModel.clearGame()
             viewModel.drawAnswer(context = context)
+        },
+        onClickShare = {
+            context.copyTextToClipboard(
+                count = uiModel.tryCount,
+                input = uiModel.input,
+                gameClearTime = uiModel.gameClearTime
+            )
         }
     )
 }
@@ -99,17 +109,17 @@ fun PlaygroundContent(
     onClickSubmit: () -> Unit,
     onClickDelete: () -> Unit,
     replayGame: () -> Unit,
+    onClickShare: () -> Unit,
 ) {
+    val coroutineScope = rememberCoroutineScope()
     val tutorialSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var isOpenTutorialModal by remember { mutableStateOf(false) }
-
-    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(bottom = 72.dp)
-            .background(KkodlebapTheme.colors.white),
+            .background(KkodlebapTheme.colors.white)
+            .padding(bottom = 72.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(
@@ -136,6 +146,7 @@ fun PlaygroundContent(
                     isOpenTutorialModal = true
                 }
                 .size(48.dp), contentAlignment = Alignment.Center) {
+
                 Icon(
                     painter = painterResource(id = R.drawable.ic_question_mark),
                     contentDescription = "도움말",
@@ -168,27 +179,42 @@ fun PlaygroundContent(
         }
     }
 
+    KkodlebapAlert(
+        isOpen = gameResultRes != null,
+        onDismissRequest = {
+            replayGame()
+            updateGameResultRes(null)
+        }
+    ) {
+        gameResultRes?.let {
+            GameResultAlertContent(
+                coroutineScope = coroutineScope,
+                answer = uiModel.answer ?: "",
+                gameResultRes = it,
+                onClick = {
+                    replayGame()
+                    updateGameResultRes(null)
+                },
+                onClickShare = onClickShare,
+            )
+        }
+    }
+
     KkodlebapModal(
         isOpen = isOpenTutorialModal,
         sheetState = tutorialSheetState,
-        onDismissRequest = { isOpenTutorialModal = false }) {
-        TutorialModalContent(onClickClose = {
-            coroutineScope.launch {
-                tutorialSheetState.hide()
-            }
+        onDismissRequest = {
             isOpenTutorialModal = false
-        })
-    }
-
-    KkodlebapAlert(isOpen = gameResultRes != null, onDismissRequest = {
-        updateGameResultRes(null)
-    }) {
-        gameResultRes?.let {
-            GameResultAlertContent(answer = uiModel.answer ?: "", gameResultRes = it, onClick = {
-                replayGame()
-                updateGameResultRes(null)
-            })
         }
+    ) {
+        TutorialModalContent(
+            onClickClose = {
+                coroutineScope.launch {
+                    tutorialSheetState.hide()
+                }
+                isOpenTutorialModal = false
+            }
+        )
     }
 }
 
@@ -339,6 +365,7 @@ fun PreviewPlaygroundContent() {
         onClickJamoKey = {},
         onClickSubmit = {},
         onClickDelete = {},
-        replayGame = {}
+        replayGame = {},
+        onClickShare = {},
     )
 }

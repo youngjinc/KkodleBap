@@ -5,17 +5,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.oznnni.kkodlebap.presentation.content.GameResultRes
+import com.oznnni.kkodlebap.presentation.util.WordPool
 import com.oznnni.kkodlebap.ui.theme.Blue100
 import com.oznnni.kkodlebap.ui.theme.Blue400
 import com.oznnni.kkodlebap.ui.theme.Blue600
 import com.oznnni.kkodlebap.ui.theme.Gray200
-import com.oznnni.kkodlebap.util.WordPool
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.time.LocalDateTime
 
 enum class ColorType(val color: Color, val emoji: String) {
     CORRECT(color = Blue600, emoji = "💙"),
@@ -36,6 +38,7 @@ data class PlaygroundUiModel(
     val answer: String? = null,
     val errorMessage: String = "",
     val numOfCurrentJamo: Int = 0,
+    val gameClearTime: LocalDateTime? = null,
 ) {
     companion object {
         const val JAMO_COUNT = 6
@@ -89,7 +92,7 @@ class PlaygroundViewModel : ViewModel() {
 
     fun submitInput(context: Context, afterSuccess: (GameResultRes) -> Unit) {
         val fromIdx = getInputFromIdx()
-        val toIdx = getInputToIdx(fromIdx)
+        val toIdx = getInputToIdx(fromIdx = fromIdx, length = uiModel.value.numOfCurrentJamo)
         val inputJamoList = uiModel.value.input.subList(fromIdx, toIdx)
 
         if (inputJamoList.size < PlaygroundUiModel.JAMO_COUNT) {
@@ -116,16 +119,22 @@ class PlaygroundViewModel : ViewModel() {
 
                 Timber.e(uiModel.value.tryCount.toString())
                 if (updatedPartialJamoTile.count { it.colorType == ColorType.CORRECT } == PlaygroundUiModel.JAMO_COUNT) {
+                    delay(200)
+                    _uiModel.update { it.copy(gameClearTime = LocalDateTime.now()) }
                     afterSuccess(GameResultRes.SUCCESS)
                 } else if (uiModel.value.tryCount == PlaygroundUiModel.MAX_ATTEMPT_COUNT - 1) {
+                    delay(200)
                     afterSuccess(GameResultRes.FAILURE)
                 } else {
                     _uiModel.update {
-                        it.copy(numOfCurrentJamo = 0, tryCount = it.tryCount.plus(1))
+                        it.copy(numOfCurrentJamo = 0)
                     }
                 }
+                _uiModel.update {
+                    it.copy(tryCount = it.tryCount.plus(1))
+                }
             } else {
-                clearCurrentJamoTile() // TODO 메세지 띄우기
+                clearCurrentJamoTile()
                 _uiModel.update {
                     it.copy(errorMessage = "존재하지 않는 단어예요!")
                 }
@@ -134,7 +143,6 @@ class PlaygroundViewModel : ViewModel() {
     }
 
     private fun clearCurrentJamoTile() {
-        Timber.e("hello4")
         _uiModel.update { uiModel ->
             uiModel.copy(
                 input = uiModel.input.dropLast(PlaygroundUiModel.JAMO_COUNT),
@@ -144,7 +152,6 @@ class PlaygroundViewModel : ViewModel() {
     }
 
     private fun updateJamoTile(updatedPartialJamoTile: List<JamoTile>) {
-        Timber.e("hello5")
         var updatedJamoCount = 0
         val fromIdx = getInputFromIdx()
         val toIdx = getInputToIdx(fromIdx)
@@ -163,7 +170,6 @@ class PlaygroundViewModel : ViewModel() {
     }
 
     private fun updateKeyboard(currentGameBoardTiles: List<JamoTile>) {
-        Timber.e("updatedPartialJamoTile :$currentGameBoardTiles")
         _uiModel.update {
             it.copy(keyboard = uiModel.value.keyboard.map { keyboardTiles ->
                 keyboardTiles.map { keyboardTile ->
@@ -188,19 +194,14 @@ class PlaygroundViewModel : ViewModel() {
         if (uiModel.value.errorMessage.isNotEmpty()) {
             _uiModel.update { it.copy(errorMessage = "") }
         }
-        Timber.e("hello7")
-        Timber.e("jamoTile: $jamoTile")
         if (jamoTile != null && uiModel.value.numOfCurrentJamo < PlaygroundUiModel.JAMO_COUNT) {
-            Timber.e("case1 : ${uiModel.value.input.plus(jamoTile)}")
             _uiModel.update {
                 it.copy(
                     input = uiModel.value.input.plus(jamoTile.copy(colorType = ColorType.NONE)),
                     numOfCurrentJamo = it.numOfCurrentJamo.plus(1)
                 )
             }
-            Timber.e("uimodel: ${uiModel.value}")
         } else if (jamoTile == null && uiModel.value.numOfCurrentJamo > 0) {
-            Timber.e("case2 ${if (uiModel.value.input.isNotEmpty()) uiModel.value.input.dropLast(1) else uiModel.value.input}")
             _uiModel.update {
                 it.copy(
                     input = if (it.input.isNotEmpty()) it.input.dropLast(1) else it.input,
@@ -211,11 +212,11 @@ class PlaygroundViewModel : ViewModel() {
     }
 
     fun clearGame() {
-        Timber.e("hello8")
         _uiModel.update { PlaygroundUiModel() }
     }
 
     private fun getInputFromIdx() = uiModel.value.tryCount * PlaygroundUiModel.JAMO_COUNT
 
-    private fun getInputToIdx(fromIdx: Int) = fromIdx + PlaygroundUiModel.JAMO_COUNT
+    private fun getInputToIdx(fromIdx: Int, length: Int = PlaygroundUiModel.JAMO_COUNT) =
+        fromIdx + length
 }
