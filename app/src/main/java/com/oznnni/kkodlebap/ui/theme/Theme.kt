@@ -37,23 +37,9 @@ fun KkodlebapTheme(
     colors: KkoddlebapColors = LocalColors.current,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
-
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.background.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true
-        }
-    }
-
     CompositionLocalProvider(LocalColors provides colors) {
         MaterialTheme(
-            colorScheme = colorScheme,
+            colorScheme = LightColorScheme,
             typography = MaterialTypography,
             content = content,
         )

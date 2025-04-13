@@ -3,22 +3,28 @@ package com.oznnni.kkodlebap.presentation.activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.oznnni.kkodlebap.presentation.screen.PlaygroundScreen
+import androidx.compose.runtime.SideEffect
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.oznnni.kkodlebap.presentation.navigation.MyAppNavHost
 import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
+import com.oznnni.kkodlebap.ui.theme.Yellow100
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
+            val systemUiController = rememberSystemUiController()
+
+            SideEffect {
+                systemUiController.setSystemBarsColor(
+                    color = Yellow100,
+                    darkIcons = true,
+                )
+            }
+
             KkodlebapTheme {
-                PlaygroundScreen()
+                MyAppNavHost()
             }
         }
     }

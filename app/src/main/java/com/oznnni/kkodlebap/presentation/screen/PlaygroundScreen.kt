@@ -42,6 +42,7 @@ import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.oznnni.kkodlebap.R
 import com.oznnni.kkodlebap.designsystem.KkodlebapAlert
 import com.oznnni.kkodlebap.designsystem.KkodlebapModal
@@ -60,10 +61,16 @@ import kotlinx.coroutines.launch
 @Composable
 fun PlaygroundScreen(viewModel: PlaygroundViewModel = viewModel()) {
     val context = LocalContext.current
+    val systemUiController = rememberSystemUiController()
     val uiModel by viewModel.uiModel.collectAsStateWithLifecycle()
     var gameResultRes by remember { mutableStateOf<GameResultRes?>(null) }
 
     LaunchedEffect(Unit) {
+        systemUiController.setSystemBarsColor(
+            color = Color.White,
+            darkIcons = true,
+        )
+
         viewModel.drawAnswer(context = context)
         WordPool.getJamoParsedWords(context = context)
     }

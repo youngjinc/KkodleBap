@@ -19,6 +19,9 @@ val Blue600 = Color(0xFF3394FF)
 // Red Scale
 val Red700 = Color(0xFFFF4C42)
 
+// Yellow Scale
+val Yellow100 = Color(0xFFFFFEF2)
+
 // System
 val BaseRipple = Color(0x42000000)
 
@@ -34,6 +37,7 @@ data class KkoddlebapColors(
     val blue400: Color,
     val blue600: Color,
     val red700: Color,
+    val yellow100: Color,
     val baseRipple: Color,
 )
 
@@ -49,5 +53,6 @@ fun kkodlebapLightColors() = KkoddlebapColors(
     blue400 = Blue400,
     blue600 = Blue600,
     red700 = Red700,
+    yellow100 = Yellow100,
     baseRipple = BaseRipple,
 )
