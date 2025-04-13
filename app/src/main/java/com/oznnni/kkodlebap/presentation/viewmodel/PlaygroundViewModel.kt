@@ -17,11 +17,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
-enum class ColorType(val color: Color) {
-    CORRECT(Blue600),
-    PRESENT(Blue400),
-    WRONG(Gray200),
-    NONE(Blue100)
+enum class ColorType(val color: Color, val emoji: String) {
+    CORRECT(color = Blue600, emoji = "💙"),
+    PRESENT(color = Blue400, emoji = "🩵"),
+    WRONG(color = Gray200, emoji = "🤍"),
+    NONE(color = Blue100, emoji = "🤍")
 }
 
 data class JamoTile(

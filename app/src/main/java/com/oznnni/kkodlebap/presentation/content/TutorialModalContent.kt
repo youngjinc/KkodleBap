@@ -91,7 +91,7 @@ fun TutorialModalContent(
                     color = KkodlebapTheme.colors.gray700
                 )
                 Text(
-                    text = "🩶 회색은 ‘정답에 없는 자모예요!’",
+                    text = "🤍 회색은 ‘정답에 없는 자모예요!’",
                     style = Typography.SuitR4,
                     color = KkodlebapTheme.colors.gray700
                 )
