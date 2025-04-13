@@ -1,9 +1,8 @@
-package com.oznnni.kkodlebap.util
+package com.oznnni.kkodlebap.presentation.util
 
 import android.content.Context
 import com.oznnni.kkodlebap.presentation.viewmodel.JamoTile
 import com.oznnni.kkodlebap.presentation.viewmodel.PlaygroundUiModel
-import timber.log.Timber
 
 object WordPool {
     private var answerWords = emptyList<String>()
@@ -62,7 +61,7 @@ object WordPool {
         return allWords
     }
 
-    private fun getJamoParsedWords(context: Context): List<List<Char>> {
+    fun getJamoParsedWords(context: Context): List<List<Char>> {
         if (jamoParsedWords.isEmpty()) {
             jamoParsedWords = getAllWords(context = context).map { splitWordToJamo(it) }
         }
