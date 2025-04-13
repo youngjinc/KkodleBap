@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
+import com.oznnni.kkodlebap.designsystem.theme.KkodlebapTheme
 
 @Composable
 fun KkodlebapAlert(

@@ -51,11 +51,11 @@ import com.oznnni.kkodlebap.presentation.content.GameResultRes
 import com.oznnni.kkodlebap.presentation.content.TutorialModalContent
 import com.oznnni.kkodlebap.presentation.util.WordPool
 import com.oznnni.kkodlebap.presentation.util.copyTextToClipboard
-import com.oznnni.kkodlebap.presentation.viewmodel.JamoTile
-import com.oznnni.kkodlebap.presentation.viewmodel.PlaygroundUiModel
 import com.oznnni.kkodlebap.presentation.viewmodel.PlaygroundViewModel
-import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
-import com.oznnni.kkodlebap.ui.theme.Typography
+import com.oznnni.kkodlebap.designsystem.theme.KkodlebapTheme
+import com.oznnni.kkodlebap.designsystem.theme.Typography
+import com.oznnni.kkodlebap.presentation.model.JamoTile
+import com.oznnni.kkodlebap.presentation.model.PlaygroundUiModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -72,7 +72,7 @@ fun PlaygroundScreen(viewModel: PlaygroundViewModel = viewModel()) {
         )
 
         viewModel.drawAnswer(context = context)
-        WordPool.getJamoParsedWords(context = context)
+        WordPool.getAllWordsAsJamoList(context = context)
     }
 
     PlaygroundContent(
@@ -82,7 +82,7 @@ fun PlaygroundScreen(viewModel: PlaygroundViewModel = viewModel()) {
             gameResultRes = it
         },
         onClickJamoKey = {
-            viewModel.onChangeInput(jamoTile = it)
+            viewModel.onInputChanged(jamoTile = it)
         },
         onClickSubmit = {
             viewModel.submitInput(context = context, afterSuccess = {
@@ -90,7 +90,7 @@ fun PlaygroundScreen(viewModel: PlaygroundViewModel = viewModel()) {
             })
         },
         onClickDelete = {
-            viewModel.onChangeInput(jamoTile = null)
+            viewModel.onInputChanged(jamoTile = null)
         },
         replayGame = {
             viewModel.clearGame()

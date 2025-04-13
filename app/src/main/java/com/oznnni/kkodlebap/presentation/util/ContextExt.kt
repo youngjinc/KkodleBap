@@ -3,7 +3,7 @@ package com.oznnni.kkodlebap.presentation.util
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import com.oznnni.kkodlebap.presentation.viewmodel.JamoTile
+import com.oznnni.kkodlebap.presentation.model.JamoTile
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -11,10 +11,12 @@ import java.util.Locale
 fun Context.copyTextToClipboard(count: Int, input: List<JamoTile>, gameClearTime: LocalDateTime?) {
     val text =
         "🍚 꼬들밥 🍚 ${count}회 만에 성공! ✨\n\n" +
-        "${input.mapIndexed { index, jamoTile -> jamoTile.colorType.emoji }.chunked(6)
-            .joinToString("\n") { it.joinToString("") }}\n\n" +
-        "${formatKoreanDateTime(gameClearTime)}\n\n" +
-        "https://play.google.com/store/apps/details?id=${this.packageName}"
+                "${
+                    input.mapIndexed { index, jamoTile -> jamoTile.colorType.emoji }.chunked(6)
+                        .joinToString("\n") { it.joinToString("") }
+                }\n\n" +
+                "${formatKoreanDateTime(gameClearTime)}\n\n" +
+                "https://play.google.com/store/apps/details?id=${this.packageName}"
 
     val clipboard = this.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
     val clip = ClipData.newPlainText("text", text)

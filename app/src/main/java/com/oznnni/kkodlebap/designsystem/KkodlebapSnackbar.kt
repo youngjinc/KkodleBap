@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastFilterNotNull
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastMap
-import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
-import com.oznnni.kkodlebap.ui.theme.Typography
+import com.oznnni.kkodlebap.designsystem.theme.KkodlebapTheme
+import com.oznnni.kkodlebap.designsystem.theme.Typography
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 

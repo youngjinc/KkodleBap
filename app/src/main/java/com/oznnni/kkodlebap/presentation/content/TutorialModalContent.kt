@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.oznnni.kkodlebap.R
-import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
-import com.oznnni.kkodlebap.ui.theme.Typography
+import com.oznnni.kkodlebap.designsystem.theme.KkodlebapTheme
+import com.oznnni.kkodlebap.designsystem.theme.Typography
 
 @Composable
 fun TutorialModalContent(

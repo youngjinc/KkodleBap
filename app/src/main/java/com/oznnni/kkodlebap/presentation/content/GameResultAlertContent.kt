@@ -31,8 +31,8 @@ import com.oznnni.kkodlebap.designsystem.KkodlebapSnackbar
 import com.oznnni.kkodlebap.designsystem.KkodlebapSnackbarHost
 import com.oznnni.kkodlebap.designsystem.showKkodelbapSnackbar
 import com.oznnni.kkodlebap.designsystem.toMillis
-import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
-import com.oznnni.kkodlebap.ui.theme.Typography
+import com.oznnni.kkodlebap.designsystem.theme.KkodlebapTheme
+import com.oznnni.kkodlebap.designsystem.theme.Typography
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

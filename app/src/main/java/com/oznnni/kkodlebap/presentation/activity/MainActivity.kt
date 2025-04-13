@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.SideEffect
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.oznnni.kkodlebap.presentation.navigation.MyAppNavHost
-import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
-import com.oznnni.kkodlebap.ui.theme.Yellow100
+import com.oznnni.kkodlebap.designsystem.theme.KkodlebapTheme
+import com.oznnni.kkodlebap.designsystem.theme.Yellow100
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

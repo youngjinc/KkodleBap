@@ -20,8 +20,8 @@ import androidx.navigation.NavController
 import com.oznnni.kkodlebap.R
 import com.oznnni.kkodlebap.presentation.navigation.Screen
 import com.oznnni.kkodlebap.presentation.util.WordPool
-import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
-import com.oznnni.kkodlebap.ui.theme.Typography
+import com.oznnni.kkodlebap.designsystem.theme.KkodlebapTheme
+import com.oznnni.kkodlebap.designsystem.theme.Typography
 import kotlinx.coroutines.delay
 
 @Composable
@@ -29,7 +29,7 @@ fun SplashScreen(navController: NavController) {
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        WordPool.getJamoParsedWords(context = context)
+        WordPool.getAllWordsAsJamoList(context = context)
 
         delay(1500L)
         navController.navigate(Screen.Playground.route) {

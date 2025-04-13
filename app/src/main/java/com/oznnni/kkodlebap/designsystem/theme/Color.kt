@@ -1,4 +1,4 @@
-package com.oznnni.kkodlebap.ui.theme
+package com.oznnni.kkodlebap.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 

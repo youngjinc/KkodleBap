@@ -1,4 +1,4 @@
-package com.oznnni.kkodlebap.ui.theme
+package com.oznnni.kkodlebap.designsystem.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme

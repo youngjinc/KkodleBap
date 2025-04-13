@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.oznnni.kkodlebap.ui.theme.KkodlebapTheme
+import com.oznnni.kkodlebap.designsystem.theme.KkodlebapTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

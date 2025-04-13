@@ -1,17 +1,17 @@
 package com.oznnni.kkodlebap.presentation.util
 
 import android.content.Context
-import com.oznnni.kkodlebap.presentation.viewmodel.JamoTile
-import com.oznnni.kkodlebap.presentation.viewmodel.PlaygroundUiModel
+import com.oznnni.kkodlebap.presentation.model.JamoTile
+import com.oznnni.kkodlebap.presentation.model.PlaygroundUiModel
 
 object WordPool {
     private var answerWords = emptyList<String>()
     private var allWords = emptyList<String>()
     private var jamoParsedWords = emptyList<List<Char>>()
 
-    private const val CHO = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"
-    private const val JUNG = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ"
-    private val JONG = listOf(
+    private const val CHOSEONG = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"
+    private const val JUNGSEONG = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ"
+    private val JONGSEONG = listOf(
         "", "ㄱ", "ㄲ", "ㄳ", "ㄴ", "ㄵ", "ㄶ", "ㄷ", "ㄹ",
         "ㄺ", "ㄻ", "ㄼ", "ㄽ", "ㄾ", "ㄿ", "ㅀ", "ㅁ", "ㅂ",
         "ㅄ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ"
@@ -61,7 +61,14 @@ object WordPool {
         return allWords
     }
 
-    fun getJamoParsedWords(context: Context): List<List<Char>> {
+    fun drawAnswer(context: Context): String? {
+        val wordList = getAnswerWords(context)
+        val word = wordList.randomOrNull() ?: return null
+        answerWords = answerWords.minus(word)
+        return word
+    }
+
+    fun getAllWordsAsJamoList(context: Context): List<List<Char>> {
         if (jamoParsedWords.isEmpty()) {
             jamoParsedWords = getAllWords(context = context).map { splitWordToJamo(it) }
         }
@@ -69,15 +76,8 @@ object WordPool {
         return jamoParsedWords
     }
 
-    fun getRandomWord(context: Context): String? {
-        val wordList = getAnswerWords(context)
-        val word = wordList.randomOrNull() ?: return null
-        answerWords = answerWords.minus(word)
-        return word
-    }
-
-    fun isExistingWord(context: Context, inputJamoTiles: List<JamoTile>): Boolean {
-        return getJamoParsedWords(context).contains(inputJamoTiles.map { it.jamo })
+    fun isValidWord(context: Context, inputJamoTiles: List<JamoTile>): Boolean {
+        return getAllWordsAsJamoList(context).contains(inputJamoTiles.map { it.jamo })
     }
 
     fun splitWordToJamo(input: String): List<Char> {
@@ -90,9 +90,9 @@ object WordPool {
                 val jungIdx = (code % (21 * 28)) / 28
                 val jongIdx = code % 28
 
-                val cho = CHO[choIdx]
-                val jung = JUNG[jungIdx]
-                val jong = JONG[jongIdx]
+                val cho = CHOSEONG[choIdx]
+                val jung = JUNGSEONG[jungIdx]
+                val jong = JONGSEONG[jongIdx]
 
                 // 초성 분해
                 result += complexInitialMap[cho] ?: listOf(cho)
