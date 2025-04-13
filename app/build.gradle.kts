@@ -2,9 +2,6 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
-//    id("com.google.dagger.hilt.android")
-//    id("kotlin-kapt")
-//    id("com.google.devtools.ksp")
 }
 
 android {
@@ -63,7 +60,10 @@ dependencies {
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.accompanist.ui.controller)
+    implementation(libs.timber)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -71,9 +71,4 @@ dependencies {
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
-    implementation("com.jakewharton.timber:timber:5.0.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-//    implementation("com.google.dagger:hilt-android:2.48")
-//    ksp("com.google.dagger:hilt-compiler:2.48")
-//    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 }
