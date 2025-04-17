@@ -8,6 +8,8 @@ import com.oznnni.kkodlebap.presentation.model.ColorType
 import com.oznnni.kkodlebap.presentation.model.JamoTile
 import com.oznnni.kkodlebap.presentation.model.PlaygroundUiModel
 import com.oznnni.kkodlebap.presentation.util.WordPool
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,10 +17,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class PlaygroundViewModel : ViewModel() {
+@HiltViewModel
+class PlaygroundViewModel @Inject constructor(@ApplicationContext context: Context) : ViewModel() {
     private val _uiModel = MutableStateFlow(PlaygroundUiModel())
     val uiModel = _uiModel.asStateFlow()
+
+    init {
+        drawAnswer(context)
+        WordPool.getAllWordsAsJamoList(context = context)
+    }
 
     fun drawAnswer(context: Context) {
         _uiModel.update {

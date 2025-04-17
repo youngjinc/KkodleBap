@@ -40,26 +40,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastForEachIndexed
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.oznnni.kkodlebap.R
 import com.oznnni.kkodlebap.designsystem.KkodlebapAlert
 import com.oznnni.kkodlebap.designsystem.KkodlebapModal
+import com.oznnni.kkodlebap.designsystem.theme.KkodlebapTheme
+import com.oznnni.kkodlebap.designsystem.theme.Typography
 import com.oznnni.kkodlebap.presentation.content.GameResultAlertContent
 import com.oznnni.kkodlebap.presentation.content.GameResultRes
 import com.oznnni.kkodlebap.presentation.content.TutorialModalContent
-import com.oznnni.kkodlebap.presentation.util.WordPool
-import com.oznnni.kkodlebap.presentation.util.copyTextToClipboard
-import com.oznnni.kkodlebap.presentation.viewmodel.PlaygroundViewModel
-import com.oznnni.kkodlebap.designsystem.theme.KkodlebapTheme
-import com.oznnni.kkodlebap.designsystem.theme.Typography
 import com.oznnni.kkodlebap.presentation.model.JamoTile
 import com.oznnni.kkodlebap.presentation.model.PlaygroundUiModel
+import com.oznnni.kkodlebap.presentation.util.copyTextToClipboard
+import com.oznnni.kkodlebap.presentation.viewmodel.PlaygroundViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun PlaygroundScreen(viewModel: PlaygroundViewModel = viewModel()) {
+fun PlaygroundScreen(viewModel: PlaygroundViewModel = hiltViewModel()) {
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
     val uiModel by viewModel.uiModel.collectAsStateWithLifecycle()
@@ -70,9 +69,6 @@ fun PlaygroundScreen(viewModel: PlaygroundViewModel = viewModel()) {
             color = Color.White,
             darkIcons = true,
         )
-
-        viewModel.drawAnswer(context = context)
-        WordPool.getAllWordsAsJamoList(context = context)
     }
 
     PlaygroundContent(
