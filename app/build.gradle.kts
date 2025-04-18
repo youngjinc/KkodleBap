@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
@@ -23,6 +25,15 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            keyAlias = getProperty("KEY_ALIAS")
+            keyPassword = getProperty("KEY_PASSWORD")
+            storeFile = file(getProperty("KEYSTORE_PATH"))
+            storePassword = getProperty("STORE_PASSWORD")
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -32,8 +43,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+
+            signingConfig = signingConfigs.getByName("release")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -78,4 +92,8 @@ dependencies {
 //    implementation(libs.hilt.android)
 //    implementation(libs.androidx.hilt.navigation.compose)
 //    ksp(libs.hilt.compiler)
+}
+
+fun getProperty(key: String): String {
+    return gradleLocalProperties(rootDir).getProperty(key)
 }

@@ -30,7 +30,6 @@ class PlaygroundViewModel(context: Context) : ViewModel() {
         _uiModel.update {
             it.copy(answer = WordPool.drawAnswer(context = context))
         }
-        Timber.e("uiModel: ${uiModel.value.answer}")
     }
 
     fun submitInput(context: Context, afterSuccess: (GameResultRes) -> Unit) {
