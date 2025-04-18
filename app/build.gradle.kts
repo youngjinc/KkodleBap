@@ -2,8 +2,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.com.google.dagger.hilt.android)
-    alias(libs.plugins.com.google.devtools.ksp)
+//    alias(libs.plugins.com.google.dagger.hilt.android)
+//    alias(libs.plugins.com.google.devtools.ksp)
 }
 
 android {
@@ -25,7 +25,9 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -59,21 +61,21 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.ui)
     implementation(libs.ui.graphics)
+    debugImplementation(libs.ui.tooling)
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.accompanist.ui.controller)
     implementation(libs.timber)
+    debugImplementation(libs.ui.test.manifest)
     testImplementation(libs.junit)
+    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
 
-    implementation(libs.hilt.android)
-    implementation(libs.androidx.hilt.navigation.compose)
-    ksp(libs.hilt.compiler)
+//    implementation(libs.hilt.android)
+//    implementation(libs.androidx.hilt.navigation.compose)
+//    ksp(libs.hilt.compiler)
 }

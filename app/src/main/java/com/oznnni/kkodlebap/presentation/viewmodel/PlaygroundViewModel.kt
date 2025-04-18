@@ -8,19 +8,16 @@ import com.oznnni.kkodlebap.presentation.model.ColorType
 import com.oznnni.kkodlebap.presentation.model.JamoTile
 import com.oznnni.kkodlebap.presentation.model.PlaygroundUiModel
 import com.oznnni.kkodlebap.presentation.util.WordPool
-import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.time.LocalDateTime
-import javax.inject.Inject
 
-@HiltViewModel
-class PlaygroundViewModel @Inject constructor(@ApplicationContext context: Context) : ViewModel() {
+class PlaygroundViewModel(context: Context) : ViewModel() {
     private val _uiModel = MutableStateFlow(PlaygroundUiModel())
     val uiModel = _uiModel.asStateFlow()
 
@@ -33,6 +30,7 @@ class PlaygroundViewModel @Inject constructor(@ApplicationContext context: Conte
         _uiModel.update {
             it.copy(answer = WordPool.drawAnswer(context = context))
         }
+        Timber.e("uiModel: ${uiModel.value.answer}")
     }
 
     fun submitInput(context: Context, afterSuccess: (GameResultRes) -> Unit) {

@@ -10,9 +10,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.oznnni.kkodlebap.designsystem.theme.KkodlebapTheme
 import com.oznnni.kkodlebap.designsystem.theme.Yellow100
 import com.oznnni.kkodlebap.presentation.navigation.MyAppNavHost
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {

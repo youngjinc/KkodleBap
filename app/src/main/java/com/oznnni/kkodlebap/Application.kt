@@ -1,19 +1,17 @@
 package com.oznnni.kkodlebap
 
 import android.app.Application
-import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
-@HiltAndroidApp
 class Application : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        Timber.plant(KkodleBapDebugTree())
+        Timber.plant(KkodlebapDebugTree())
     }
 }
 
-class KkodleBapDebugTree : Timber.DebugTree() {
+class KkodlebapDebugTree : Timber.DebugTree() {
     override fun createStackElementTag(element: StackTraceElement) =
         "${element.fileName}:${element.lineNumber}#${element.methodName}"
 }

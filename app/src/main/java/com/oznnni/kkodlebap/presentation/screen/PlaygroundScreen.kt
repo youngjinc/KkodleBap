@@ -40,8 +40,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastForEachIndexed
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.oznnni.kkodlebap.R
 import com.oznnni.kkodlebap.designsystem.KkodlebapAlert
@@ -54,13 +54,16 @@ import com.oznnni.kkodlebap.presentation.content.TutorialModalContent
 import com.oznnni.kkodlebap.presentation.model.JamoTile
 import com.oznnni.kkodlebap.presentation.model.PlaygroundUiModel
 import com.oznnni.kkodlebap.presentation.util.copyTextToClipboard
+import com.oznnni.kkodlebap.presentation.viewmodel.KkodlebapViewModelFactory
 import com.oznnni.kkodlebap.presentation.viewmodel.PlaygroundViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun PlaygroundScreen(viewModel: PlaygroundViewModel = hiltViewModel()) {
+fun PlaygroundScreen() {
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
+    val viewModel =
+        viewModel<PlaygroundViewModel>(factory = KkodlebapViewModelFactory(context.applicationContext))
     val uiModel by viewModel.uiModel.collectAsStateWithLifecycle()
     var gameResultRes by remember { mutableStateOf<GameResultRes?>(null) }
 
