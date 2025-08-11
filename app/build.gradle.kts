@@ -4,18 +4,16 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
-//    alias(libs.plugins.com.google.dagger.hilt.android)
-//    alias(libs.plugins.com.google.devtools.ksp)
 }
 
 android {
     namespace = "com.oznnni.kkodlebap"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.oznnni.kkodlebap"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 4
         versionName = "1.0.0"
 

@@ -1,6 +1,8 @@
 package com.oznnni.kkodlebap.presentation.navigation
 
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,7 +12,7 @@ import com.oznnni.kkodlebap.presentation.screen.SplashScreen
 
 @Composable
 fun MyAppNavHost(navController: NavHostController = rememberNavController()) {
-    NavHost(navController = navController, startDestination = Screen.Splash.route) {
+    NavHost(modifier = Modifier.systemBarsPadding(), navController = navController, startDestination = Screen.Splash.route) {
         composable(Screen.Splash.route) {
             SplashScreen(navController = navController)
         }
